@@ -1,161 +1,52 @@
 1840. Maximum Building Height
 
-Trace an Example Step-by-Step:
 
-Let's assume we have n = 6 buildings and only one restriction: [[5, 1]] (Building 5 cannot be taller than 1).
-
-
-> Step 1 & 2: Add Boundaries and Sort
-- We automatically add building 1 (height 0) and building 6 (max possible height 6-1 = 5).
-- Our array looks like this: restrictions = [[1, 0],[5, 1],[6, 5]]
-
-- The Rule We Are Following: The problem has two fundamental rules from the start:Building 1 always starts at height 0.The height difference between any two adjacent buildings can be at most 1.Because of this, if we have (n = 6) buildings, the absolute tallest building 6 could possibly be even if there were zero restrictions in the entire town—is if we just climbed up by +1 at every single step.
-
-i.e
-Let's look at the absolute best-case scenario for building heights from 1 to 6:
-Building 1: Height = 0 (Mandatory start)
-Building 2: Height = 1 (0 + 1)
-Building 3: Height = 2 (1 + 1)
-Building 4: Height = 3 (2 + 1)
-Building 5: Height = 4 (3 + 1)
-Building 6: Height = 5 (4 + 1)
-
-thats why we add [n, n-1] as a safety ceiling.
-
-
-
----
-
-
-Step 3: Left-to-Right Pass (Fixing Limits Forward)
-We check if a building's limit is realistic based on the building to its left.
-
-* Look at Building 5: The building before it is Building 1 (height 0). The distance is 5 - 1 = 4 steps. Moving from height 0 across 4 steps means it can at most reach a height of 0 + 4 = 4. Its original limit is 1. We keep the stricter limit: min(1, 4) = 1.
-
-* Look at Building 6: The building before it is now Building 5 (height 1). Distance is 6 - 5 = 1. Max height it can reach from Building 5 is 1 + 1 = 2. Its original limit was 5. We update it to min(5, 2) = 2.
-
-Array is now: [[1, 0],[5, 1],[6, 2]]
-
-
----
-
-Step 4: Right-to-Left Pass (Fixing Limits Backward)
-We check if a building's limit is realistic based on the building to its right.
-
-* Look at Building 5: The building to its right is Building 6 (height 2). Distance is 1. Moving backward, Building 5 could be at most 2 + 1 = 3. Its current limit is 1. We keep min(1, 3) = 1.
-* Look at Building 1: The building to its right is Building 5 (height 1). Distance is 4. Moving backward, Building 1 could be at most 1 + 4 = 5. Its current limit is 0. We keep min(0, 5) = 0.
-
-Array remains: [[1, 0],[5, 1],[6, 2]] 
-
-
----
-
-
-Step 5: Find the Peaks Between Buildings
-Now we look at the gaps between these restricted points to see how high a roof can spike up like a tent.
-Let's find the peak between Building 1 (height 0) and Building 5 (height 1):
-
-* The absolute maximum height formula is: Math.floor((h1 + h2 + distane) / 2)
-* Peak = Math.floor((0 + 1 + (5 - 1) / 2)) = 2 
-
-Let's see the actual ideal heights built out for all 6 buildings to see why this is true:
-
-* Building 1: Height 0 (Restricted)
-* Building 2: Height 1
-* Building 3: Height 2 (The peak!)
-* Building 4: Height 1
-* Building 5: Height 1 (Restricted)
-* Building 6: Height 2 (Restricted)
-
-The maximum height reached across the entire skyline is 2.
-------------------------------
-
-
-How that formula was derived?
-
-The Logic:
-Imagine two people standing on two different buildings:
-
-* Person 1 is at height h1.
-* Person 2 is at height h2.
-* The horizontal space between them is distance.
-
-They want to build a roof that goes up from both sides at a slope of 1 (up 1, forward 1) until they meet at the highest possible point in the middle. Let's call this highest point Peak.
-
-The Math Step-by-Step
-
-   1. Person 1 has to climb from h1 up to the Peak. The number of horizontal steps they take is:
-   Steps1 = Peak - h1
-
-   2. Person 2 has to climb from h2 up to the Peak. The number of horizontal steps they take is:
-   Steps2 = Peak - h2
-
-   3. Together, the steps they take must equal the total distance between the buildings:
-   Steps1 + Steps2 = distance
-
-   4. Substitute the equations from steps 1 and 2 into this formula:
-   (Peak - h1) + (Peak - h2) = distance
-   
-   5. Simplify it by grouping the terms:
-   2Peak - h1 - h2 = distance
-
-   6. Move h1 and h2 to the right side of the equals sign:
-   2Peak = h1 + h2 + distance
-
-   7. Divide by 2 to isolate the Peak:
-   Peak = (h1 + h2 + distance) / 2
-
-Since building heights must be whole numbers, we use Math.floor() or Math.trunc() to round down if it ends in .5.
-
-Is it worth memorizing?
-Do not memorize the final formula. Instead, just remember the visual concept: The total distance is split between the two slopes climbing up to meet each other.
-
-
-
----
-
-
-function maxBuilding(n, restrictions) {
-    // Step 1: Add the start and end boundary conditions
+/**
+ * @param {number} n
+ * @param {number[][]} restrictions
+ * @return {number}
+ */
+var maxBuilding = function (n, restrictions) {
+    // Add the start and end boundary conditions
     restrictions.push([1, 0]);
     restrictions.push([n, n - 1]);
 
-    // Step 2: Sort restrictions by building position
+    // sort by building position
     restrictions.sort((a, b) => a[0] - b[0]);
 
-    const m = restrictions.length;
+    let m = restrictions.length;
 
-    // Step 3: Left-to-Right pass
-    for (let i = 1; i < m; i++) {
+    // left to right pass
+    for (let i = 1; i < m; i++) { // No need to include 1st building
         let distance = restrictions[i][0] - restrictions[i - 1][0];
         let maxPossibleHeight = restrictions[i - 1][1] + distance;
         restrictions[i][1] = Math.min(restrictions[i][1], maxPossibleHeight);
     }
 
-    // Step 4: Right-to-Left pass
-    for (let i = m - 2; i >= 0; i--) {
+    // right to left pass
+    for (let i = m - 2; i >= 0; i--) { // No need to include last building
         let distance = restrictions[i + 1][0] - restrictions[i][0];
         let maxPossibleHeight = restrictions[i + 1][1] + distance;
         restrictions[i][1] = Math.min(restrictions[i][1], maxPossibleHeight);
     }
 
-    // Step 5: Find the highest peak between adjacent restricted buildings
+    // Find the highest peak between adjacent restricted buildings
+    // i.e (h1 + h2 + distance) / 2
+
     let maxHeight = 0;
     for (let i = 1; i < m; i++) {
         let pos1 = restrictions[i - 1][0];
-        let h1 = restrictions[i - 1][1];
         let pos2 = restrictions[i][0];
+        let distance = pos2 - pos1;
+
+        let h1 = restrictions[i - 1][1];
         let h2 = restrictions[i][1];
 
-        let distance = pos2 - pos1;
-        let peak = Math.floor((h1 + h2 + distance) / 2);
-        
+        let peak = Math.trunc((h1 + h2 + distance) / 2);
         maxHeight = Math.max(maxHeight, peak);
     }
-
     return maxHeight;
-}
-
+};
 
 
 ---

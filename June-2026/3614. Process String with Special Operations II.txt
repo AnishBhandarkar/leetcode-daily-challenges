@@ -38,13 +38,10 @@ var processStr = function (s, k) {
 };
 
 
+---
 
 
 // Approach 2:
-
-Your original solution explicitly builds the resulting string using an array. While that works for small inputs, the `#` operation doubles the entire string (`S → SS`), so the length can grow exponentially. Even though the problem guarantees the final length is at most (10^{15}), that's still far beyond what can fit in memory. Additionally, `result.push(...result)` tries to pass every element as a function argument, which causes a `RangeError` when the array becomes large. So the approach fails because it attempts to materialize a potentially enormous string.
-
-The optimized solution never constructs the string. Instead, it first computes only the final length by simulating the effect of each operation on the length. If `k` is outside that length, it returns `"."`. Otherwise, it traverses the operations in reverse and "undoes" them, continuously translating the target index `k` back to the index it would have had before each operation. For `#`, an index in the duplicated half is mapped back to the first half; for `%`, the index is mirrored using `len - 1 - k`; for a normal character append, if `k` points to the position where that character was appended, that character is the answer. By tracking only the current length and one index, the algorithm runs in **O(n)** time and **O(1)** space, regardless of how large the final string would be.
 
 
 > So the algorithm is:
@@ -52,8 +49,6 @@ The optimized solution never constructs the string. Instead, it first computes o
 - Move through operations in reverse.
 - Keep translating k to the position it had before each operation.
 - Eventually you'll reach the original character that generated that position.
-
-We're not undoing operations because it's fun—we're undoing them because finding the origin of one index is vastly cheaper than constructing a string that might contain a quadrillion characters.
 
 
 
@@ -123,17 +118,6 @@ var processStr = function (s, k) {
 /*
 Time:  O(n)
 Space: O(1)
-
-Idea:
-1. First pass:
-   - Track only the final length of the string.
-   - Never build the actual string because it can become huge.
-
-2. Second pass (right -> left):
-   - Undo each operation and map k back to its position
-     before that operation.
-   - When undoing a normal character append, if k points
-     to that character's position, return it immediately.
 */
 
 
