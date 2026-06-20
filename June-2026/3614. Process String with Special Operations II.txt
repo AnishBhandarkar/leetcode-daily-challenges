@@ -1,0 +1,139 @@
+3614. Process String with Special Operations II
+
+
+// Appraoch 1: {Lead to Memory Limit Exceeded (MLE)}
+
+Bcoz it will lead to creation of a huge string.
+(RangeError: Maximum call stack size exceeded)
+
+T(n) = O(n^2)
+S(n) = O(n)
+
+
+/**
+ * @param {string} s
+ * @param {number} k
+ * @return {character}
+ */
+var processStr = function (s, k) {
+    let result = [];
+
+    let specialChars = new Set(['*', '#', '%']);
+
+    for (let ch of s) {
+        if (!specialChars.has(ch)) {
+            result.push(ch);
+        } else {
+            if (ch === '*' && result.length > 0) {
+                result.pop();
+            } else if (ch === '#') {
+                result.push(...result);
+            } else if (ch === '%') {
+                result.reverse();
+            }
+        }
+    }
+
+    return k >= result.length ? "." : result[k];
+};
+
+
+
+
+// Approach 2:
+
+Your original solution explicitly builds the resulting string using an array. While that works for small inputs, the `#` operation doubles the entire string (`S → SS`), so the length can grow exponentially. Even though the problem guarantees the final length is at most (10^{15}), that's still far beyond what can fit in memory. Additionally, `result.push(...result)` tries to pass every element as a function argument, which causes a `RangeError` when the array becomes large. So the approach fails because it attempts to materialize a potentially enormous string.
+
+The optimized solution never constructs the string. Instead, it first computes only the final length by simulating the effect of each operation on the length. If `k` is outside that length, it returns `"."`. Otherwise, it traverses the operations in reverse and "undoes" them, continuously translating the target index `k` back to the index it would have had before each operation. For `#`, an index in the duplicated half is mapped back to the first half; for `%`, the index is mirrored using `len - 1 - k`; for a normal character append, if `k` points to the position where that character was appended, that character is the answer. By tracking only the current length and one index, the algorithm runs in **O(n)** time and **O(1)** space, regardless of how large the final string would be.
+
+
+> So the algorithm is:
+- Compute the final length.
+- Move through operations in reverse.
+- Keep translating k to the position it had before each operation.
+- Eventually you'll reach the original character that generated that position.
+
+We're not undoing operations because it's fun—we're undoing them because finding the origin of one index is vastly cheaper than constructing a string that might contain a quadrillion characters.
+
+
+
+/**
+ * @param {string} s
+ * @param {number} k
+ * @return {character}
+ */
+var processStr = function (s, k) {
+    // Compute the final length without actually building the string.
+    let len = 0;
+
+    for (const ch of s) {
+        if (ch === '*') {
+            // Delete the last character if the string is non-empty.
+            len = len > 0 ? len - 1 : 0;
+        } else if (ch === '#') {
+            // Duplicate the current string.
+            len *= 2;
+        } else if (ch === '%') {
+            // Reverse does not change the length.
+            continue;
+        } else {
+            // Append a normal character.
+            len++;
+        }
+    }
+
+    // k is outside the final string.
+    if (k >= len) return ".";
+
+    // Walk backwards and undo each operation.
+    for (let i = s.length - 1; i >= 0; i--) {
+        const ch = s[i];
+
+        if (ch === '*') {
+            // Forward: removed one character.
+            // Backward: restore the deleted position.
+            len++;
+        } else if (ch === '#') {
+            // Forward: S -> S + S
+            // If idx is in the second half, map it to the first half.
+            len /= 2n;
+
+            if (k >= len) {
+                k -= len;
+            }
+        } else if (ch === '%') {
+            // Forward: reverse the string.
+            // Backward: reverse again.
+            k = len - 1 - k;
+        } else {
+            // Forward: appended this character at position len - 1.
+            len--;
+
+            // If idx points to that appended position,
+            // we've found the answer.
+            if (k === len) {
+                return ch;
+            }
+        }
+    }
+
+    return ".";
+};
+
+/*
+Time:  O(n)
+Space: O(1)
+
+Idea:
+1. First pass:
+   - Track only the final length of the string.
+   - Never build the actual string because it can become huge.
+
+2. Second pass (right -> left):
+   - Undo each operation and map k back to its position
+     before that operation.
+   - When undoing a normal character append, if k points
+     to that character's position, return it immediately.
+*/
+
+

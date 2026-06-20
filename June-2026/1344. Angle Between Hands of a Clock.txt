@@ -1,0 +1,192 @@
+1344. Angle Between Hands of a Clock
+
+
+T(n) = S(n) = O(1)
+
+var angleClock = function(hour, minutes) {
+    const hourAngle = hour * 30 + minutes * 0.5;
+    const minuteAngle = minutes * 6;
+
+    const diff = Math.abs(hourAngle - minuteAngle);
+
+    return Math.min(diff, 360 - diff);
+};
+
+
+// Approach:
+- Think of the clock as a circle of 360°. Since there are 12 hour marks, the angle between consecutive hour numbers is 360 / 12 = 30°. i.e In each hr the hr angle moves 30°.
+
+- Similarly, since there are 60 minute marks, each minute corresponds to 360 / 60 = 6°. 
+
+- The minute hand is straightforward: if the time is minutes, its angle from 12 o'clock is simply minutes × 6. The hour hand is the key insight. At h:00, it would be at h × 30°, but the hour hand does not stay fixed between hours—it continuously moves toward the next number. Since it travels 30° in 60 minutes, it moves 0.5° per minute. Therefore, at h:m, the hour hand's angle is h × 30 + m × 0.5. Once we know the positions of both hands, we compute the absolute difference between their angles. However, two angles are formed between the hands (for example, 75° and 285°), and the problem asks for the smaller one. So the final answer is the minimum of diff and 360 - diff.
+
+
+
+Mental model to remember:
+
+* Minute hand → 6° per minute
+* Hour hand → 30° per hour + 0.5° per minute
+* Answer → smaller angle between the two positions.
+
+
+
+---
+
+
+Fair point 😄. Here's the code first, then the intuition tied directly to it.
+
+## Optimal JS Solution
+
+
+var angleClock = function(hour, minutes) {
+    const hourAngle = (hour % 12) * 30 + minutes * 0.5;
+    const minuteAngle = minutes * 6;
+
+    const diff = Math.abs(hourAngle - minuteAngle);
+
+    return Math.min(diff, 360 - diff);
+};
+
+
+---
+
+## Line-by-line intuition
+
+### 1. Hour hand angle
+
+const hourAngle = (hour % 12) * 30 + minutes * 0.5;
+
+Think of the clock as 360°.
+
+There are 12 hours:
+
+360 / 12 = 30°
+
+
+So:
+
+1 o'clock = 30°
+2 o'clock = 60°
+3 o'clock = 90°
+...
+
+
+That's:
+(hour % 12) * 30 [%12 bcoz in case hr is in railway i.e till 23]
+
+
+But the hour hand doesn't stay fixed.
+
+At `3:30`, it has moved halfway toward `4`.
+
+It moves:
+
+30° per hour
+30° / 60 minutes
+= 0.5° per minute
+
+
+So we add:
+
+
+minutes * 0.5
+
+
+Example:
+
+text
+3:30
+
+hourAngle
+= 3 * 30 + 30 * 0.5
+= 90 + 15
+= 105°
+
+
+---
+
+### 2. Minute hand angle
+
+
+const minuteAngle = minutes * 6;
+
+
+The minute hand makes a full circle (360°) in 60 minutes.
+
+text
+360 / 60 = 6°
+
+
+per minute.
+
+Example:
+
+text
+30 minutes
+
+30 * 6
+= 180°
+
+
+---
+
+### 3. Difference between hands
+
+
+const diff = Math.abs(hourAngle - minuteAngle);
+
+
+Example:
+
+text
+hourAngle   = 105°
+minuteAngle = 180°
+
+diff = 75°
+
+
+---
+
+### 4. Smaller angle
+
+There are always **two paths** between the hands.
+
+Example:
+
+text
+75°
+
+
+clockwise, and
+
+text
+360 - 75 = 285°
+
+
+the other way around.
+
+The problem asks for the **smaller** angle.
+
+So:
+
+
+return Math.min(diff, 360 - diff);
+
+---
+
+### Interview one-liner
+
+The whole problem boils down to remembering:
+
+Hour hand  -> 30° per hour + 0.5° per minute
+Minute hand -> 6° per minute
+
+
+Once you compute those two angles, it's just:
+
+
+Math.min(
+    Math.abs(hourAngle - minuteAngle),
+    360 - Math.abs(hourAngle - minuteAngle)
+);
+

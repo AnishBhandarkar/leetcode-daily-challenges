@@ -1,0 +1,29 @@
+3612. Process String with Special Operations I
+
+T(n) = O(n^2)
+S(n) = O(n)
+
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var processStr = function (s) {
+    let result = [];
+    let specialChars = new Set(['*', '#', '%']);
+
+    for (let ch of s) {
+        if (!specialChars.has(ch)) {
+            result.push(ch);
+        } else {
+            if (ch === '*' && result.length > 0) {
+                result.pop();
+            } else if (ch === '#') {
+                result.push(...result);
+            } else if (ch === '%') {
+                result.reverse();
+            }
+        }
+    }
+    return result.join('');
+};
+

@@ -1,0 +1,22 @@
+1732. Find the Highest Altitude
+
+// Prefix sum (Description is unclear, understand from examples)
+
+// Approach:
+
+/**
+ * @param {number[]} gain
+ * @return {number}
+ */
+var largestAltitude = function (gain) {
+    let sum = 0;
+    let maxGain = -Infinity;
+    for (let ele of gain) {
+        sum += ele;
+        maxGain = Math.max(maxGain, sum);
+    }
+    return Math.max(0, maxGain);
+};
+
+// T(n) = O(n)
+// S(n) = O(1)
