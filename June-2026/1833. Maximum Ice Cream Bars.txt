@@ -1,0 +1,84 @@
+1833. Maximum Ice Cream Bars
+
+
+// Approach 1: (sort + greedy)
+
+
+/**
+ * @param {number[]} costs
+ * @param {number} coins
+ * @return {number}
+ */
+var maxIceCream = function (costs, coins) {
+    let result = 0;
+
+    costs.sort((a, b) => a - b);
+
+    for (let i = 0; i < costs.length; i++) {
+        if (costs[i] <= coins) {
+            result++;
+            coins = coins - costs[i];
+        }
+    }
+    return result;
+};
+
+/*
+T(n) = O(n logn)
+S(n) = O(1)
+*/
+
+
+---
+
+
+// Approach 2: (Counting sort idea + freq map + greedy)
+
+
+
+/**
+ * @param {number[]} costs
+ * @param {number} coins
+ * @return {number}
+ */
+var maxIceCream = function (costs, coins) {
+    const max = Math.max(...costs);
+
+    let freq = new Array(max + 1).fill(0);
+
+    let result = 0;
+
+    for (let cost of costs) {
+        freq[cost]++;
+    }
+
+    for (let cost = 1; cost <= max; cost++) {
+        if (freq[cost] === 0) {
+            continue;
+        }
+
+        const affordable = Math.floor(coins / cost);
+
+        const canBuy = Math.min(freq[cost], affordable);
+
+        result += canBuy;
+        coins -= canBuy * cost;
+
+        if (coins < cost) {
+            break;
+        }
+    }
+
+    return result;
+};
+
+/*
+
+Time: O(n + m)
+Space: O(m)
+
+where:
+n = costs.length
+m = max(costs)
+
+*/
