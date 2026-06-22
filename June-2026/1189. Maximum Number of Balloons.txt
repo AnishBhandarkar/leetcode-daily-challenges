@@ -1,0 +1,119 @@
+1189. Maximum Number of Balloons
+
+
+// Approach 1: (Hashtable)
+
+
+/**
+ * @param {string} text
+ * @return {number}
+ */
+var maxNumberOfBalloons = function (text) {
+    // balloon
+    let set = new Set('balloon');
+    let map = new Map();
+
+    for (let ch of set) {
+        map.set(ch, 0);
+    }
+
+    for (let i = 0; i < text.length; i++) {
+        let ch = text[i];
+        if (set.has(ch)) {
+            if (map.has(ch)) {
+                map.set(ch, map.get(ch) + 1);
+            }
+        }
+    }
+
+    // because l and o appears twice in balloon
+    map.set('l', Math.trunc(map.get('l') / 2));
+    map.set('o', Math.trunc(map.get('o') / 2));
+
+    return Math.min(...[...map.values()]);
+};
+
+
+/*
+
+T(n) = O(n)
+S(n) = O(1)
+
+*/
+
+
+---
+
+
+// Approach 2: (Simpler)
+
+
+/**
+ * @param {string} text
+ * @return {number}
+ */
+var maxNumberOfBalloons = function (text) {
+    let count = {
+        'b': 0,
+        'a': 0,
+        'l': 0,
+        'o': 0,
+        'n': 0
+    };
+
+    for (let ch of text) {
+        if (ch in count) {
+            count[ch]++;
+        }
+    }
+
+    return Math.min(
+        count['b'], count['a'], count['n'],
+        Math.trunc(count['l'] / 2),
+        Math.trunc(count['o'] / 2)
+    );
+};
+
+/*
+
+T(n) = O(n)
+S(n) = O(1)
+
+*/
+
+
+
+---
+
+
+// Approach 3: (Flexible with any target instead of balloon)
+
+/**
+ * @param {string} text
+ * @return {number}
+ */
+var maxNumberOfBalloons = function (text) {
+    let target = "balloon"
+
+    const need = new Map();
+    const have = new Map();
+
+    for (let ch of target) {
+        need.set(ch, (need.get(ch) || 0) + 1);
+        have.set(ch, 0);
+    }
+
+    for (let ch of text) {
+        if (have.has(ch)) {
+            have.set(ch, have.get(ch) + 1);
+        }
+    }
+
+    let result = Infinity;
+
+    for (let [ch, freq] of need) {
+        result = Math.min(result, Math.trunc(have.get(ch) / freq));
+    }
+
+    return result;
+};
