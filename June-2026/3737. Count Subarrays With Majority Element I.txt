@@ -1,0 +1,80 @@
+3737. Count Subarrays With Majority Element I
+
+
+// Approach 1: (Bruteforce: i.e test every possible subarray)
+
+T(n) = O(n^3)
+S(n) = O(1)
+
+
+TLE
+
+
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ */
+var countMajoritySubarrays = function (nums, target) {
+    if (!nums.includes(target)) {
+        return 0;
+    }
+
+    let result = 0;
+
+    for (let i = 0; i < nums.length; i++) {
+        for (let j = i; j < nums.length; j++) {
+            let freq = 0
+            for (let k = i; k <= j; k++) {
+                if (nums[k] === target) {
+                    freq++;
+                }
+            }
+
+            if (freq > Math.floor((j - i + 1) / 2)) {
+                result++;
+            }
+        }
+    }
+
+    return result;
+};
+
+
+
+---
+
+// Approach 2:
+
+T(n) = O(n^2)
+S(n) = O(1)
+
+
+
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ */
+var countMajoritySubarrays = function (nums, target) {
+    if (!nums.includes(target)) {
+        return 0;
+    }
+
+    let result = 0;
+
+    for (let i = 0; i < nums.length; i++) {
+        let freq = 0;
+        for (let j = i; j < nums.length; j++) {
+            if (nums[j] === target) {
+                freq++;
+            }
+
+            if (freq > Math.floor((j - i + 1) / 2)) {
+                result++;
+            }
+        }
+    }
+
+    return result;
+}
