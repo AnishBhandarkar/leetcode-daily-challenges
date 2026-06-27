@@ -1,0 +1,59 @@
+3020. Find the Maximum Number of Elements in Subset
+
+
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var maximumLength = function (nums) {
+    let map = new Map();
+
+    for (let ele of nums) {
+        map.set(ele, (map.get(ele) || 0) + 1);
+    }
+
+    let maxLen = 1;
+
+    // handle 1's case separately.
+    if (map.has(1)) {
+        let count = map.get(1);
+        if (count % 2 === 0) {
+            count--; // bcoz o/p should be of odd length
+        }
+        maxLen = Math.max(maxLen, count);
+    }
+
+    // handle rest of the elements
+    for (let key of map.keys()) {
+        let current = key;
+
+        if (current === 1) {
+            continue; // bcoz alreday handled
+        }
+
+        let length = 0
+
+        while (map.has(current) && map.get(current) >= 2) {
+            length += 2;
+            current = current * current; // move t next ele in sequence
+        }
+
+        if (map.has(current) && map.get(current) === 1) {
+            length++;
+        } else {
+            length--; // added extra element and its even so make odd
+        }
+
+        maxLen = Math.max(maxLen, length);
+    }
+
+    return maxLen;
+};
+
+/*
+T(n) = O(n + k * log log M) = O(n)
+S(n) = O(n)
+*/
+
+
