@@ -1,0 +1,41 @@
+1967. Number of Strings That Appear as Substrings in Word
+
+
+/**
+ * @param {string[]} patterns
+ * @param {string} word
+ * @return {number}
+ */
+var numOfStrings = function (patterns, word) {
+    let result = 0;
+
+    for (let i = 0; i < patterns.length; i++) {
+        if (patterns[i].length > word.length) {
+            continue;
+        }
+        if (word.includes(patterns[i])) {
+            result++;
+        }
+    }
+
+    return result;
+};
+
+/*
+
+T(n) = O(n * m * k) [includes() takes m * k, assuming JS using naive string matching algorithm, otherwise m+k]
+n = patterns.length
+m = word.length
+k = patterns[i].length
+
+S(n) = O(1)
+*/
+
+
+
+---
+
+
+Better approaches:
+1. KMP algorithm
+2. Trie (if there are many patterns)
