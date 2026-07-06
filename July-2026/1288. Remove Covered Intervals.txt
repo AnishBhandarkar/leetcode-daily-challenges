@@ -1,0 +1,32 @@
+1288. Remove Covered Intervals
+
+/*
+ * @param {number[][]} intervals
+ * @return {number}
+ */
+var removeCoveredIntervals = function (intervals) {
+    intervals.sort((a, b) => {
+        if (a[0] === b[0]) {
+            return b[1] - a[1];
+        }
+        return a[0] - b[0];
+    });
+
+    let result = 0;
+    let maxEnd = -1;
+
+
+    for (let [start, end] of intervals) {
+        if (end > maxEnd) {
+            result++;
+            maxEnd = end;
+        }
+    }
+
+    return result;
+};
+
+/*
+T(n) = O(n logn)
+S(n) = O(1)
+*/
