@@ -1,0 +1,70 @@
+3754. Concatenate Non-Zero Digits and Multiply by Sum I
+
+
+// Approach 1:
+
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var sumAndMultiply = function (n) {
+    let xArr = [];
+
+    while (n > 0) {
+        let rem = n % 10;
+        if (rem !== 0) {
+            xArr.push(rem);
+        }
+        n = Math.trunc(n / 10);
+    }
+
+    let sum = xArr.reduce((ele, acc) => ele + acc, 0);
+    let x = Number(xArr.reverse().join(""))
+
+    return x * sum;
+};
+
+/*
+T(n) = O(d)
+S(n) = o(d)
+*/
+
+Note:
+Let d be the number of digits in n.
+- Overall time and  complexity is O(d), which is O(log n) since d ≈ floor(log10 n) + 1.
+
+
+---
+
+
+
+// Approach 2:
+
+
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var sumAndMultiply = function (n) {
+    let x = 0;
+    let sum = 0;
+    let place = 1;
+
+    while (n > 0) {
+        let digit = n % 10;
+        n = Math.trunc(n / 10);
+
+        if (digit !== 0) {
+            x += digit * place;
+            place *= 10;
+            sum += digit;
+        }
+    }
+
+    return x * sum;
+};
+
+/*
+T(n) = O(d) = O(logn)
+S(n) = o(1)
+*/
