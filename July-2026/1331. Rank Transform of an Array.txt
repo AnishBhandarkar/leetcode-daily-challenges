@@ -1,0 +1,71 @@
+1331. Rank Transform of an Array
+
+
+
+// Approach 1: (Bruteforce)
+
+(Time Limit Exceeded 42 / 43 testcases passed)
+
+/**
+ * @param {number[]} arr
+ * @return {number[]}
+ */
+var arrayRankTransform = function (arr) {
+    // Rank of an ele is no. of unique eles less than that ele + 1
+
+    let filteredArr = arr.filter((ele, index) => index === arr.indexOf(ele));
+    filteredArr.sort((a, b) => b - a);
+
+    let result = [];
+    let len = filteredArr.length;
+
+    let map = new Map();
+    for(let i = 0; i < filteredArr.length; i++) {
+        map.set(filteredArr[i], len - i);
+    }
+    
+    for(let num of arr) {
+        result.push(map.get(num));
+    }
+    return result;
+};
+
+/*
+T(n) = O(n^2)
+S(n) = O(n)
+*/
+
+
+
+---
+
+
+// Approach 2:
+
+
+/**
+ * @param {number[]} arr
+ * @return {number[]}
+ */
+var arrayRankTransform = function (arr) {
+    let filteredArr = [...new Set(arr)];
+    filteredArr.sort((a, b) => b - a);
+
+    let result = [];
+    let len = filteredArr.length;
+
+    let map = new Map();
+    for(let i = 0; i < filteredArr.length; i++) {
+        map.set(filteredArr[i], len - i);
+    }
+    
+    for(let num of arr) {
+        result.push(map.get(num));
+    }
+    return result;
+};
+
+/*
+T(n) = O(n logn)
+S(n) = O(n)
+*/
