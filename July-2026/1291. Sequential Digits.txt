@@ -1,0 +1,77 @@
+1291. Sequential Digits
+
+
+// Approach 1: Bruteforce.
+
+(TLE)
+
+/**
+ * @param {number} low
+ * @param {number} high
+ * @return {number[]}
+ */
+var sequentialDigits = function (low, high) {
+    let result = [];
+    // For all numbers between low and high check for Sequential Digits
+    for (let i = low; i <= high; i++) {
+        let num = String(i);
+        console.log(num);
+        let j = 1
+        for (; j < num.length; j++) {
+            if (Number(num[j] - 1) !== Number(num[j - 1])) {
+                break;
+            }
+        }
+        if (j >= num.length) {
+            result.push(Number(num));
+        }
+    }
+
+    return result;
+};
+
+/*
+T(n) = O(n * m); n = high - low + 1, l = No. of digits in i.
+S(n) = O(1)
+*/
+
+
+---
+
+
+
+// Approach 2: 
+
+
+Idea:
+
+Instead of checking every number between low and high, observe that there are only 36 possible sequential-digit numbers in total. Use the string "123456789" as a template and generate every sequential number by taking substrings of different lengths (2 to 9) while sliding the starting position. Convert each substring to a number, and if it lies within the range [low, high], add it to the answer. This avoids iterating through millions or billions of unnecessary numbers.
+
+
+/**
+ * @param {number} low
+ * @param {number} high
+ * @return {number[]}
+ */
+var sequentialDigits = function(low, high) {
+    const result = [];
+    const digits = "123456789";
+
+    for (let len = 2; len <= 9; len++) {
+        for (let start = 0; start + len <= 9; start++) {
+            const num = Number(digits.substring(start, start + len));
+
+            if (num >= low && num <= high) {
+                result.push(num);
+            }
+        }
+    }
+
+    return result;
+};
+
+
+/*
+T(n) = O(36) = O(1)
+S(n) = O(1)
+*/
