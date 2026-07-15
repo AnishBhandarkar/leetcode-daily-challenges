@@ -1,0 +1,82 @@
+3658. GCD of Odd and Even Sums
+
+
+// Approach 1: bruteforce.
+
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var gcdOfOddEvenSums = function (n) {
+    const getOddSum = (n) => {
+        let sum = 0;
+        let i = 1;
+        while (n > 0) {
+            sum += i;
+            i += 2;
+            n--;
+        }
+        return sum;
+    };
+
+    const getEvenSum = (n) => {
+        let sum = 0;
+        let i = 2;
+        while (n > 0) {
+            sum += i;
+            i += 2;
+            n--;
+        }
+        return sum;
+    };
+
+    const gcd = (n1, n2) => {
+        let smaller = n1 < n2 ? n1 : n2;
+        let result = 1;
+
+        for (let i = 1; i <= smaller; i++) {
+            if (n1 % i === 0 && n2 % i === 0) {
+                result = i;
+            }
+        }
+
+        return result;
+    }
+
+    return gcd(getOddSum(n), getEvenSum(n));
+};
+
+/*
+T(n) = O(n)
+S(n) = O(1)
+*/
+
+
+
+
+---
+
+
+// Approach 2: Maths.
+
+This problem has a simple mathematical optimization.
+
+1. First n odd numbers sum to n².
+2. First n even numbers sum to n(n+1).
+3. gcd(n², n(n+1)) = n × gcd(n, n+1).
+4. Consecutive integers have GCD 1.
+5. Hence the answer is simply n.
+
+
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var gcdOfOddEvenSums = function (n) {
+    return n;
+};
+
+/*
+T(n) = O(1)
+S(n) = O(1)
+*/
