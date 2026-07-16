@@ -1,0 +1,116 @@
+3867. Sum of GCD of Formed Pairs
+
+
+// Apprach 1: Bruteforce.
+
+
+Time Limit Exceeded
+956 / 1012 testcases passed
+
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var gcdSum = function (nums) {
+    const prefixGcd = [];
+
+    let maxNum = 0;
+
+    for (let i = 0; i < nums.length; i++) {
+        maxNum = Math.max(maxNum, nums[i]);
+        prefixGcd.push(gcd(maxNum, nums[i]));
+    }
+
+    prefixGcd.sort((a, b) => a - b);
+
+    let start = 0;
+    let end = prefixGcd.length - 1;
+
+    console.log(prefixGcd);
+
+    let result = 0;
+
+    while (start < end) {
+        result += gcd(prefixGcd[start], prefixGcd[end]);
+        start++;
+        end--;
+    }
+
+    return result;
+};
+
+const gcd = (n1, n2) => {
+    let smaller = n1 < n2 ? n1 : n2;
+
+    let result = 1;
+
+    for (let i = 1; i <= smaller; i++) {
+        if (n1 % i === 0 && n2 % i === 0) {
+            result = i;
+        }
+    }
+
+    return result;
+}
+
+/*
+T(n) = O(nlogn)
+S(n) = O(1)
+*/
+
+
+
+---
+
+// Approach 2:
+approach is correct, but your implementation of gcd() is the reason for the TLE.
+
+Use Euclid's GCD Algorithm
+
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var gcdSum = function (nums) {
+    const prefixGcd = [];
+
+    let maxNum = 0;
+
+    for (let i = 0; i < nums.length; i++) {
+        maxNum = Math.max(maxNum, nums[i]);
+        prefixGcd.push(gcd(maxNum, nums[i]));
+    }
+
+    prefixGcd.sort((a, b) => a - b);
+
+    let start = 0;
+    let end = prefixGcd.length - 1;
+
+    console.log(prefixGcd);
+
+    let result = 0;
+
+    while (start < end) {
+        result += gcd(prefixGcd[start], prefixGcd[end]);
+        start++;
+        end--;
+    }
+
+    return result;
+};
+
+// Euclid's algorithm
+const gcd = (a, b) => {
+    while (b !== 0) {
+        [a, b] = [b, a % b];
+    }
+    return a;
+};
+
+
+/*
+T(n) = O(nlogn)
+S(n) = O(1)
+*/
