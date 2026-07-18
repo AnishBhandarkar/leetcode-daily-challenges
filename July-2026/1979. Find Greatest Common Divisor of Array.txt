@@ -1,0 +1,63 @@
+1979. Find Greatest Common Divisor of Array
+
+
+// Approach 1: Sorting.
+
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var findGCD = function (nums) {
+    nums.sort((a, b) => a - b);
+
+    const gcd = (a, b) => {
+        while (b !== 0) {
+            [a, b] = [b, a % b];
+        }
+        return a;
+    }
+
+    return gcd(nums[0], nums[nums.length - 1]);
+};
+
+/*
+T(n) = O(nlogn + log(min(a, b))) = O(nlogn)
+S(n) = O(1)
+*/
+
+
+
+---
+
+
+// Approach 2: Find only min & max instead of sorting.
+
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var findGCD = function (nums) {
+    let smallest = Infinity;
+    let largest = -Infinity;
+
+    for (let num of nums) {
+        smallest = Math.min(smallest, num);
+        largest = Math.max(largest, num);
+    }
+
+    const gcd = (a, b) => {
+        while (b !== 0) {
+            [a, b] = [b, a % b];
+        }
+        return a;
+    }
+
+    return gcd(smallest, largest);
+};
+
+/*
+T(n) = O(n + log(min(a, b))) = O(n)
+S(n) = O(1)
+*/
