@@ -1,0 +1,42 @@
+1081. Smallest Subsequence of Distinct Characters
+
+
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var smallestSubsequence = function (s) {
+    const stack = [];
+    const visited = new Set();
+    const freq = new Map();
+
+
+    for (let i = 0; i < s.length; i++) {
+        freq.set(s[i], (freq.get(s[i]) || 0) + 1);
+    }
+
+    for (let i = 0; i < s.length; i++) {
+        let ch = s[i];
+
+        freq.set(ch, freq.get(ch) - 1);
+
+        if (visited.has(ch)) {
+            continue;
+        }
+
+        while (stack.length > 0 && ch < stack[stack.length - 1] && freq.get(stack[stack.length - 1]) > 0) {
+            let top = stack.pop();
+            visited.delete(top);
+        }
+
+        stack.push(ch);
+        visited.add(ch);
+    }
+
+    return stack.join("");
+};
+
+/*
+T(n) = O(n)
+S(n) = O(26) = O(1)
+*/
