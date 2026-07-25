@@ -1,0 +1,58 @@
+3536. Maximum Product of Two Digits
+
+
+// Approach 1: Brute force
+
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var maxProduct = function (n) {
+    const numStr = String(n);
+
+    const arr = numStr.split("").sort((a, b) => b - a);
+
+    return arr[0] * arr[1];
+};
+
+/*
+T(n) = O(n logn) -> n - No. of digits in n
+S(n) = O(n)
+*/
+
+
+
+---
+
+
+// Approach 2: 
+
+
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var maxProduct = function (n) {
+    let max1 = -Infinity;
+    let max2 = -Infinity;
+
+    let temp = n;
+
+    while (temp > 0) {
+        let digit = temp % 10;
+        temp = Math.trunc(temp / 10);
+        if (digit > max1) {
+            max2 = max1;
+            max1 = digit;
+        } else if (digit <= max1 && digit > max2) {
+            max2 = digit;
+        }
+    }
+
+    return max1 * max2;
+};
+
+/*
+T(n) = O(n) -> n - No. of digits in n
+S(n) = O(1)
+*/
