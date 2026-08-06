@@ -1,0 +1,32 @@
+3345. Smallest Divisible Digit Product I
+
+
+/**
+ * @param {number} n
+ * @param {number} t
+ * @return {number}
+ */
+var smallestNumber = function (n, t) {
+    while (true) {
+        let temp = n;
+        let product = 1
+        while (temp > 0) {
+            let dig = temp % 10;
+            temp = Math.trunc(temp / 10);
+            product *= dig;
+        }
+        if (product % t === 0) {
+            return n;
+        } else {
+            n++;
+        }
+    }
+};
+
+/*
+k = how many numbers are checked before finding the answer.
+d = number of digits in n (≈ log10(n))
+
+T(n) = O(k * d) = O(k * logn);
+S(n) = O(1)
+*/
