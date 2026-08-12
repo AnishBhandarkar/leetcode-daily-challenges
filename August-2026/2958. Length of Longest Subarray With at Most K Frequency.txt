@@ -1,0 +1,35 @@
+2958. Length of Longest Subarray With at Most K Frequency
+
+
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
+var maxSubarrayLength = function (nums, k) {
+    const map = new Map();
+
+    let left = 0;
+    let maxLen = 0;
+
+    for (let right = 0; right < nums.length; right++) {
+        let rightVal = nums[right];
+
+        map.set(rightVal, (map.get(rightVal) || 0) + 1);
+
+        while (map.get(rightVal) > k) {
+            let leftVal = nums[left];
+            map.set(leftVal, map.get(leftVal) - 1);
+            left++;
+        }
+
+        maxLen = Math.max(maxLen, right - left + 1);
+    }
+
+    return maxLen;
+};
+
+/*
+T(n) = O(n)
+S(n) = O(n)
+*/
