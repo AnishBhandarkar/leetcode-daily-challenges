@@ -1,0 +1,33 @@
+3090. Maximum Length Substring With Two Occurrences
+
+
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var maximumLengthSubstring = function(s) {
+    let maxLen = 0;
+    let left = 0;
+    const map = new Map();
+
+
+    for(let right = 0; right < s.length; right++) {
+        let rightVal = s[right];
+        map.set(rightVal, (map.get(rightVal) || 0)+1);
+
+        while(map.get(rightVal) > 2) {
+            let leftVal = s[left];
+            map.set(leftVal, map.get(leftVal) -1);
+            left++;
+        }
+
+        maxLen = Math.max(maxLen, right - left +1);
+    }
+
+    return maxLen;
+};
+
+/*
+T(n) = O(n)
+S(n) = O(n)
+*/
