@@ -1,0 +1,23 @@
+3718. Smallest Missing Multiple of K
+
+
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
+var missingMultiple = function (nums, k) {
+    const set = new Set(nums);
+    let i = 1;
+    while (true) {
+        if (!set.has(i * k)) {
+            return i * k;
+        }
+        i++;
+    }
+};
+
+/*
+T(n) = O(m) where m is the smallest multiplier index i for which i*k is missing
+S(n) = O(n)
+*/
