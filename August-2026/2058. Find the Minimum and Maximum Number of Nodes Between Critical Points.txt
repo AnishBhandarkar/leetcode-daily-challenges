@@ -1,0 +1,130 @@
+2058. Find the Minimum and Maximum Number of Nodes Between Critical Points
+
+
+2058. Find the Minimum and Maximum Number of Nodes Between Critical Points
+
+
+// Approach 1: Bruteforce
+
+
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @return {number[]}
+ */
+var nodesBetweenCriticalPoints = function (head) {
+    const nodes = [];
+    let curr = head;
+
+    while (curr !== null) {
+        nodes.push(curr.val);
+        curr = curr.next;
+    }
+
+    const criticalPoints = [];
+    for (let i = 1; i < nodes.length - 1; i++) {
+        if (nodes[i] < nodes[i - 1] && nodes[i] < nodes[i + 1]) {
+            criticalPoints.push(i);
+        } else if (nodes[i] > nodes[i - 1] && nodes[i] > nodes[i + 1]) {
+            criticalPoints.push(i);
+        }
+    }
+
+    console.log(nodes);
+    console.log(criticalPoints);
+
+
+    if (criticalPoints.length < 2) {
+        return [-1, -1];
+    }
+
+    const maxCIndex = criticalPoints[criticalPoints.length - 1];
+    const minCIndex = criticalPoints[0];
+
+    let minDistance = Infinity;
+
+    for (let i = 1; i < criticalPoints.length; i++) {
+        minDistance = Math.min(
+            minDistance,
+            criticalPoints[i] - criticalPoints[i - 1]
+        );
+    }
+
+    maxDistance = maxCIndex - minCIndex;
+
+    return [minDistance, maxDistance];
+};
+
+
+/*
+T(n) = O(n)
+S(n) = O(n)
+*/
+
+
+---
+
+
+// Approach 2: Optimal
+
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @return {number[]}
+ */
+var nodesBetweenCriticalPoints = function (head) {
+    if (!head || !head.next || !head.next.next) return [-1, -1];
+    let minDistance = Infinity;
+    let maxDistance = -Infinity;
+
+    let prev = head
+    let curr = head.next;
+
+    let firstCP = -1;
+    let prevCP = -1;
+
+    let index = 1;
+
+    while (curr.next !== null) {
+        const isCritical = (curr.val < prev.val && curr.val < curr.next.val) ||
+            (curr.val > prev.val && curr.val > curr.next.val);
+
+        if (isCritical) {
+            if (firstCP === -1) {
+                firstCP = index;
+            } else {
+                minDistance = Math.min(minDistance, index - prevCP);
+            }
+            prevCP = index;
+        }
+
+        prev = curr;
+        curr = curr.next;
+        index++;
+    }
+
+    if (firstCP === prevCP) {
+        return [-1, -1];
+    }
+
+    maxDistance = prevCP - firstCP;
+
+    return [minDistance, maxDistance];
+};
+
+/*
+T(n) = O(n)
+S(n) = O(1)
+*/
