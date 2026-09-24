@@ -1,0 +1,31 @@
+3550. Smallest Index With Digit Sum Equal to Index
+
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var smallestIndex = function (nums) {
+    const calculateDigitSum = (val) => {
+        let sum = 0;
+        while (val > 0) {
+            let digit = val % 10;
+            val = Math.trunc(val / 10);
+            sum += digit;
+        }
+
+        return sum;
+    }
+
+    for (let i = 0; i < nums.length; i++) {
+        if (calculateDigitSum(nums[i]) === i) {
+            return i;
+        }
+    }
+    return -1;
+};
+
+/*
+T(n) = O(n * k); k is number of digits
+S(n) = o(1)
+*/
