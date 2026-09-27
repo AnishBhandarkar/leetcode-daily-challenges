@@ -1,0 +1,37 @@
+1190. Reverse Substrings Between Each Pair of Parentheses
+
+
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var reverseParentheses = function (s) {
+    const stack = [];
+
+    for (let i = 0; i < s.length; i++) {
+        if (s[i] !== ')') {
+            stack.push(s[i]);
+        } else {
+            let list = [];
+
+            while (stack[stack.length - 1] !== '(') {
+                list.push(stack.pop());
+            }
+            stack.pop(); // Remove opening parentheses
+
+            // add popped elements back.
+            for (const ele of list) {
+                stack.push(ele);
+            }
+        }
+    }
+    return stack.join('');
+};
+
+/*
+T(n) = O(n * m)
+S(n) = O(n)
+
+n = s.length
+m = No. of times we reverse substring = No. of pairs of bracket
+*/
