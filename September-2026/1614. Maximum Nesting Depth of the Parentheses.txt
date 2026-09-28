@@ -1,0 +1,30 @@
+1614. Maximum Nesting Depth of the Parentheses
+
+
+
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var maxDepth = function (s) {
+    const stack = [];
+    let result = 0;
+    let curr = 0;
+
+    for (let ch of s) {
+        if (ch === '(') {
+            stack.push('(');
+            curr++;
+        } else if (ch === ')') {
+            result = Math.max(result, curr);
+            stack.pop();
+            curr--;
+        }
+    }
+
+    return result;
+};
+
+/*
+T(n) = S(n) = O(n)
+*/
