@@ -1,0 +1,32 @@
+20. Valid Parentheses
+
+
+/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var isValid = function (s) {
+    const stack = [];
+
+    for (let ch of s) {
+        if (ch == '(' || ch == '{' || ch == '[') {
+            stack.push(ch);
+        } else {
+            let bracket = stack.pop();
+            if ((ch == ')' && bracket == '(') ||
+                (ch == '}' && bracket == '{') ||
+                (ch == ']' && bracket == '[')) {
+                continue;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    return stack.length === 0;
+};
+
+/*
+T(n) = O(n)
+S(n) = O(n)
+*/
