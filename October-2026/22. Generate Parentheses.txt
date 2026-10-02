@@ -1,0 +1,108 @@
+22. Generate Parentheses
+
+
+
+// Approach 1:
+
+
+/**
+ * @param {number} n
+ * @return {string[]}
+ */
+var generateParenthesis = function (n) {
+    const result = [];
+
+    const path = [];
+
+    const isValid = (arr) => {
+        let balance = 0
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i] === '(') {
+                balance++;
+            } else {
+                balance--;
+            }
+
+            if (balance < 0) {
+                return false;
+            }
+        }
+        return balance === 0;
+    };
+
+    const backtrack = () => {
+        if (path.length === 2 * n) {
+            if (isValid(path)) {
+                result.push(path.join(""));
+            }
+
+            return;
+        }
+
+        path.push('(');
+        backtrack();
+        path.pop();
+
+        path.push(')');
+        backtrack();
+        path.pop();
+    }
+
+    backtrack();
+
+    return result;
+};
+
+/*
+T(n) = O(2 ^ 2n * n)
+S(n) = O(n)
+*/
+
+
+
+
+---
+
+
+
+// Approach 2:
+
+
+/**
+ * @param {number} n
+ * @return {string[]}
+ */
+var generateParenthesis = function (n) {
+    const result = [];
+
+    const path = [];
+
+
+    const backtrack = (open, close) => {
+        if (path.length === 2 * n) {
+            result.push(path.join(""));
+            return;
+        }
+
+        if (open < n) {
+            path.push('(');
+            backtrack(open + 1, close);
+            path.pop();
+        }
+
+        if (close < open) {
+            path.push(')');
+            backtrack(open, close + 1);
+            path.pop();
+        }
+    }
+
+    backtrack(0, 0);
+
+    return result;
+};
+
+/*
+T(n) = O(2 ^ 2n * n)
+S(n) = O(n)
+*/
