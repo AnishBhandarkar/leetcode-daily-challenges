@@ -1,0 +1,78 @@
+921. Minimum Add to Make Parentheses Valid
+
+
+
+// Approach 1:
+
+
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var minAddToMakeValid = function (s) {
+    let moves = 0;
+
+    const stack = [];
+
+    for (let ch of s) {
+        if (ch === '(') {
+            stack.push(ch);
+        } else {
+            if (stack.length > 0) {
+                stack.pop();
+            } else {
+                moves++;
+            }
+        }
+    }
+
+    moves += stack.length;
+
+    return moves;
+};
+
+/*
+T(n) = O(n)
+S(n) = O(n)
+*/
+
+
+
+
+---
+
+
+
+
+// Approach 2:
+
+
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var minAddToMakeValid = function (s) {
+    let open = 0;
+    let moves = 0;
+
+    for (let ch of s) {
+        if (ch === '(') {
+            open++;
+        } else {
+            if (open > 0) {
+                open--;
+            } else {
+                moves++;
+            }
+        }
+    }
+
+    moves += open;
+
+    return moves;
+};
+
+/*
+T(n) = O(n)
+S(n) = O(1)
+*/
