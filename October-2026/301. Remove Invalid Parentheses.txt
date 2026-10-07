@@ -1,0 +1,74 @@
+301. Remove Invalid Parentheses
+
+
+/**
+ * @param {string} s
+ * @return {string[]}
+ */
+var removeInvalidParentheses = function (s) {
+    const set = new Set();
+    const curr = [];
+    const n = s.length;
+    const result = [];
+
+    const dfs = (i) => {
+        if (i === n) {
+            // check for valid parentheses and add to set
+            let count = 0;
+            for (let ch of curr) {
+                if (ch === '(') {
+                    count++;
+                } else if (ch === ')') {
+                    count--;
+                    if (count < 0) { // prune early
+                        return;
+                    }
+                }
+            }
+            if (count === 0) { // valid
+                set.add(curr.join(""));
+            }
+            return;
+        }
+
+        // take
+        curr.push(s[i]);
+        dfs(i + 1);
+
+        // skip
+        curr.pop();
+        dfs(i + 1);
+    }
+
+    dfs(0);
+
+    ['a', 'ab', 'abcd']
+
+    let maxLen = 0;
+    let newSet = new Set();
+    for (let str of set) {
+        if (str.length > maxLen) {
+            maxLen = str.length;
+            newSet.clear();
+            newSet.add(str);
+        } else if (str.length === maxLen) {
+            newSet.add(str);
+        }
+    }
+
+    return [...newSet];
+};
+
+/*
+Generate every possible string (take /skip)
+When we reach leaf node then we can check is it valid parentheses?
+If yes then we store in set.
+And at last we check the longest string in set bcoz that is the one in which min parenthes removed. And if multiple of same such length, those are our answer.
+
+
+*/
+
+
+/*
+T(n) = S(n) = O(n * 2^n)
+*/
