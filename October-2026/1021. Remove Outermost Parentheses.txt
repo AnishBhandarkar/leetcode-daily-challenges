@@ -1,0 +1,79 @@
+1021. Remove Outermost Parentheses
+
+
+
+// Approach 1: Using stack.
+
+
+
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var removeOuterParentheses = function (s) {
+    const stack = [];
+
+    const result = [];
+
+    for (let ch of s) {
+        if (ch === '(') {
+            if (stack.length > 0) {
+                result.push(ch);
+            }
+            stack.push(ch);
+        } else {
+            let ele = stack.pop();
+            if (stack.length > 0) {
+                result.push(ch);
+            }
+        }
+    }
+
+    return result.join("");
+};
+
+/*
+T(n) = O(n)
+S(n) = O(n)
+*/
+
+
+
+
+---
+
+
+
+// Apporach 2: Without stack.
+
+
+
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var removeOuterParentheses = function (s) {
+    const result = [];
+    let count = 0;
+
+    for (let ch of s) {
+        if (ch === '(') {
+            if (count !== 0) {
+                result.push(ch);
+            }
+            count++;
+        } else {
+            count--;
+            if (count !== 0) {
+                result.push(ch);
+            }
+        }
+    }
+
+    return result.join("");
+};
+
+/*
+T(n) = O(n)
+S(n) = O(1)
+*/
