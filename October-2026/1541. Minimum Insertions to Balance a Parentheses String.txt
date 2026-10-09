@@ -1,0 +1,84 @@
+1541. Minimum Insertions to Balance a Parentheses String
+
+
+
+// Approach 1: Using stack.
+
+
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var minInsertions = function (s) {
+    let insertions = 0;
+    const stack = [];
+
+    for (let i = 0; i < s.length; i++) {
+        if (s[i] === '(') {
+            stack.push(s[i]);
+        } else {
+            if (i + 1 < s.length && s[i + 1] === ')') {
+                i++;
+            } else {
+                insertions++;
+            }
+
+            if (stack.length > 0) {
+                stack.pop();
+            } else {
+                insertions++;
+            }
+        }
+    }
+
+    insertions += stack.length * 2;
+
+    return insertions;
+};
+
+
+
+
+
+---
+
+
+
+// Approach 2: Without using stack.
+
+
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var minInsertions = function (s) {
+    let insertions = 0;
+    let left = 0;
+
+    for (let i = 0; i < s.length; i++) {
+        if (s[i] === '(') {
+            left++;
+        } else {
+            if (i + 1 < s.length && s[i + 1] === ')') {
+                i++;
+            } else {
+                insertions++;
+            }
+
+            if (left > 0) {
+                left--;
+            } else {
+                insertions++;
+            }
+        }
+    }
+
+    insertions += left * 2;
+
+    return insertions;
+};
+
+/*
+T(n) = O(n)
+S(n) = O(1)
+*/
