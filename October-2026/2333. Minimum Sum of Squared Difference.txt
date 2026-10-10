@@ -1,0 +1,183 @@
+2333. Minimum Sum of Squared Difference
+
+
+
+// Approach 1: Bruteforce (TLE).
+
+
+/**
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @param {number} k1
+ * @param {number} k2
+ * @return {number}
+ */
+var minSumSquareDiff = function (nums1, nums2, k1, k2) {
+    const diff = [];
+    const n = nums1.length;
+
+    for (let i = 0; i < n; i++) {
+        diff[i] = Math.abs(nums1[i] - nums2[i]);
+    }
+
+    let totalOps = k1 + k2;
+
+    while (totalOps > 0) {
+        let maxVal = 0;
+        let maxIdx = 0;
+
+        for (let i = 0; i < n; i++) {
+            if (diff[i] > maxVal) {
+                maxVal = diff[i];
+                maxIdx = i;
+            }
+        }
+
+        if (maxVal === 0) {
+            break;
+        }
+
+        diff[maxIdx]--;
+        totalOps--;
+    }
+
+    let result = 0;
+
+    for (let i = 0; i < n; i++) {
+        result += diff[i] ** 2;
+    }
+
+    return result;
+};
+
+/*
+T(n) = O((k1+k2) * n)
+S(n) = O(n)
+*/
+
+
+
+
+---
+
+
+
+
+// Approach 2: MaxHeap (TLE)
+
+
+/**
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @param {number} k1
+ * @param {number} k2
+ * @return {number}
+ */
+var minSumSquareDiff = function (nums1, nums2, k1, k2) {
+    const maxHeap = new MaxHeap();
+    const n = nums1.length;
+
+    for (let i = 0; i < n; i++) {
+        maxHeap.insert(Math.abs(nums1[i] - nums2[i]));
+    }
+
+    let totalOps = k1 + k2;
+
+    while (totalOps > 0 && maxHeap.root() > 0) {
+        let maxVal = maxHeap.extractRoot();
+        maxHeap.insert(maxVal - 1);
+        totalOps--;
+    }
+
+    let result = 0;
+
+    while (maxHeap.size() > 0) {
+        result += (maxHeap.extractRoot() ** 2);
+    }
+
+    return result;
+};
+
+/*
+T(n) = O((k1+k2) * logn)
+S(n) = O(n)
+*/
+
+
+
+
+---
+
+
+
+// Approach 3: Counting sort.
+
+
+/**
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @param {number} k1
+ * @param {number} k2
+ * @return {number}
+ */
+var minSumSquareDiff = function (nums1, nums2, k1, k2) {
+    // counting sort
+
+    const n = nums1.length;
+    let maxDiff = 0;
+    let totalDiffSum = 0;
+    const diff = [];
+
+    let k = k1 + k2;
+
+    for (let i = 0; i < n; i++) {
+        diff[i] = Math.abs(nums1[i] - nums2[i]);
+        if (diff[i] > maxDiff) {
+            maxDiff = diff[i];
+        }
+        totalDiffSum += diff[i];
+    }
+
+    if (k >= totalDiffSum) {
+        return 0;
+    }
+
+    const bucket = new Array(maxDiff + 1).fill(0);
+    /* diff = [4, 4, 4, 3]
+        bucket = [0, 0, 0, 1, 3, 0]
+                  0, 1, 2, 3, 4, 5  // index
+    */
+    for (let i = 0; i < n; i++) {
+        bucket[diff[i]]++;
+    }
+
+    for (let i = maxDiff; i > 0 && k > 0; i--) {
+        if (bucket[i] > 0) {
+            let opsNeeded = bucket[i];
+
+            if (k >= opsNeeded) {
+                k = k - opsNeeded;
+                bucket[i - 1] += bucket[i];
+                bucket[i] = 0;
+            } else {
+                bucket[i] = bucket[i] - k;
+                bucket[i - 1] += k;
+                k = 0;
+            }
+        }
+    }
+
+    let result = 0;
+    for (let i = 0; i < bucket.length; i++) {
+        if (bucket[i] > 0) {
+            result += (i ** 2) * bucket[i];
+        }
+    }
+
+    return result;
+};
+
+/*
+T(n) = O(n + maxDiff)
+S(n) = O(n + maxDiff)
+*/
