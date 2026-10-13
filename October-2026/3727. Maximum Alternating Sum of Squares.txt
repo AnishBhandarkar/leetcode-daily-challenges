@@ -1,0 +1,31 @@
+3727. Maximum Alternating Sum of Squares
+
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var maxAlternatingSum = function (nums) {
+    nums = nums.map(ele => ele ** 2);
+    nums.sort((a, b) => b - a);
+
+    let result = 0;
+    let left = 0;
+    let right = nums.length - 1;
+
+    while (left < right) {
+        result += nums[left] - nums[right];
+        left++;
+        right--;
+    }
+    if (nums.length % 2 !== 0) {
+        result += nums[left]
+    }
+
+    return result;
+};
+
+/*
+T(n) = O(nlogn)
+S(n) = O(n)
+*/
