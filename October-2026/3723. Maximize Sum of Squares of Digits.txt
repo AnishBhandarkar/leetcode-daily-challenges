@@ -1,0 +1,37 @@
+3723. Maximize Sum of Squares of Digits
+
+
+/**
+ * @param {number} num
+ * @param {number} sum
+ * @return {string}
+ */
+var maxSumOfSquares = function (num, sum) {
+    if (sum > 9 * num) {
+        return "";
+    }
+
+    const result = [];
+
+    let nines = Math.trunc(sum / 9);
+    let remainder = sum % 9;
+
+    for (let i = 0; i < nines; i++) {
+        result.push('9');
+    }
+
+    if (remainder > 0) {
+        result.push(remainder.toString());
+    }
+
+    while (result.length < num) {
+        result.push('0');
+    }
+
+    return result.join('');
+};
+
+/*
+T(n) = O(num)
+S(n) = O(num)
+*/
