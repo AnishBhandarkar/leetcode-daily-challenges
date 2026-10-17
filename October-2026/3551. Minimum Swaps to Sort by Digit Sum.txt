@@ -1,0 +1,66 @@
+3551. Minimum Swaps to Sort by Digit Sum
+
+
+
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var minSwaps = function (nums) {
+
+    const getDigitSum = (num) => {
+        let sum = 0;
+        while (num > 0) { // 345
+            let remainder = num % 10;
+            num = Math.trunc(num / 10);
+            sum += remainder;
+        }
+        return sum;
+    };
+
+
+    const sorted = nums.toSorted((a, b) => {
+        let aDigitSum = getDigitSum(a);
+        let bDigitSum = getDigitSum(b);
+
+        if (aDigitSum === bDigitSum) {
+            return a - b;
+        } else {
+            return aDigitSum - bDigitSum;
+        }
+    });
+
+    let valToIndexMap = new Map();
+    for (let i = 0; i < nums.length; i++) {
+        valToIndexMap.set(nums[i], i);
+    }
+
+    let swapCount = 0;
+
+    for (let i = 0; i < nums.length; i++) {
+        let currVal = nums[i];
+        let expectedVal = sorted[i];
+
+        if (currVal === expectedVal) {
+            continue; // Already at right position no swap needed.
+        } else {
+            let idx = valToIndexMap.get(expectedVal);
+
+            // swap
+            [nums[i], nums[idx]] = [nums[idx], nums[i]];
+
+            // update the map with new index
+            valToIndexMap.set(currVal, idx);
+            valToIndexMap.set(expectedVal, i);
+
+            swapCount++;
+        }
+    }
+
+    return swapCount;
+};
+
+/*
+T(n) = O(nlogn)
+S(n) = O(n)
+*/
