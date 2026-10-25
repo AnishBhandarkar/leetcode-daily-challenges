@@ -1,0 +1,68 @@
+1254. Number of Closed Islands
+
+
+/**
+ * @param {number[][]} grid
+ * @return {number}
+ */
+var closedIsland = function (grid) {
+    const rows = grid.length;
+    const cols = grid[0].length;
+
+    const directions = [
+        [-1, 0], [1, 0], [0, -1], [0, 1]
+    ];
+
+    const dfs = (r, c) => {
+        if (r < 0 || c < 0 || r >= rows || c >= cols || grid[r][c] === 1) {
+            return;
+        }
+        grid[r][c] = 1;
+
+        for (const [dr, dc] of directions) {
+            dfs(r + dr, c + dc);
+        }
+    };
+
+
+    // apply dfs on border rows
+    for (let c = 0; c < cols; c++) {
+        if (grid[0][c] === 0) {
+            dfs(0, c);
+        }
+
+        if (grid[rows - 1][c] === 0) {
+            dfs(rows - 1, c);
+        }
+    }
+
+    // apply dfs on border cols
+    for (let r = 0; r < rows; r++) {
+        if (grid[r][0] === 0) {
+            dfs(r, 0);
+        }
+
+        if (grid[r][cols - 1] === 0) {
+            dfs(r, cols - 1);
+        }
+    }
+
+
+    // check for ilands
+    let closedIslands = 0;
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+            if (grid[r][c] === 0) {
+                closedIslands++;
+                dfs(r, c);
+            }
+        }
+    }
+
+    return closedIslands;
+};
+
+/*
+T(n) = O(r * c)
+S(n) = O(r * c)
+*/
