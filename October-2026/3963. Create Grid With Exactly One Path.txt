@@ -1,0 +1,28 @@
+3963. Create Grid With Exactly One Path
+
+
+/**
+ * @param {number} m
+ * @param {number} n
+ * @return {string[]}
+ */
+var createGrid = function (m, n) {
+    const grid = Array.from({ length: m }, () => new Array(n).fill('#'));
+
+    // free first row
+    for (let i = 0; i < n; i++) {
+        grid[0][i] = '.';
+    }
+
+    // free last column
+    for (let j = 0; j < m; j++) {
+        grid[j][n - 1] = '.';
+    }
+
+    return grid.map(row => row.join(''));
+};
+
+/*
+T(n) = O(m * n)
+S(n) = O(m * n)
+*/
